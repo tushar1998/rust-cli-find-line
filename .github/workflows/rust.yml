@@ -18,15 +18,12 @@ jobs:
       run: cargo build --release --verbose
     - name: Create Release
       id: create_release
-      uses: actions/create-release@latest
+      uses: rymndhng/release-on-push-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          First CLI App
-        draft: false
-        prerelease: false
+        bump_version_scheme: minor
+        release_body: "Release Test Body"
+        use_github_release_notes: true
       
           
