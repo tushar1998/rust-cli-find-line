@@ -1,7 +1,15 @@
 [package]
-name = "rust-project"
-version = "0.1.0"
+name = "findline"
+description = "A tool to search lines of a file in a directory recursively"
+version = "0.0.1-dev.0"
 edition = "2021"
+authors = ["Tushar Mistry <mistry,tushar@gmail.com>"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+homepage = "https://github.com/tushar1998/rust-cli-find-line"
+repository = "git@github.com:tushar1998/rust-cli-find-line.git"
+keywords = ["cli", "search", "find", "line", "directory", "recursive"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.4", features = ["derive"] }

@@ -3,5 +3,5 @@
 ### Usage
 
 ```bash
-$ findline --package react --path ./my-app -f package.json --exclude
+$ findline --package react --path ./my-app -f package.json --exclude-dir node_modules
 ```
