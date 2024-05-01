@@ -1,11 +1,11 @@
 ## Rust CLI app to find keywords of a file in directory
 
 ### Installation
-curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.1/install.sh | bash
+curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.2-dev.0/install.sh | bash
 
 ### Usage
 
 ```bash
-$ findline --package react --path ./my-app -f package.json --exclude-dir node_modules
+$ findline --keywords react --path ./my-app --file package.json --exclude-dir node_modules
 ```
 

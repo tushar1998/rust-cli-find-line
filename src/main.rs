@@ -7,23 +7,23 @@ use std::path::Path;
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(long, num_args(0..=50))]
-    package: Vec<String>,
+    #[arg(short, long, num_args(0..=50))]
+    keywords: Vec<String>,
 
-    #[arg(long, default_value_t = String::from("./"))]
+    #[arg(short, long, default_value_t = String::from("./"))]
     path: String,
 
-    #[arg(short,long, default_value_t = String::from("package.json"))]
+    #[arg(short, long, default_value_t = String::from("package.json"))]
     filename: String,
 
-    #[arg(long, num_args(0..=50), default_values_t=[String::from("node_modules")])]
+    #[arg(short, long, num_args(0..=50), default_values_t=[String::from("node_modules")])]
     exclude_dir: Vec<String>,
 }
 
 fn main() {
     let args = Args::parse();
 
-    // println!("{} {} {:?} {:?}!", args.path, args.filename, args.package, args.exclude_dir);
+    // println!("{} {} {:?} {:?}!", args.path, args.filename, args.keywords, args.exclude_dir);
 
     // Parameters
     let path = Path::new(&args.path);
@@ -41,12 +41,12 @@ fn main() {
     //     .open("result.txt")
     //     .unwrap();
 
-    let packages = args.package;
+    let keywords = args.keywords;
     let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect(); // Convert to HashSet
-    find_file(&path, &file_name, &packages, &exclude_dirs);
+    find_file(&path, &file_name, &keywords, &exclude_dirs);
 }
 
-fn find_file(dir: &Path, filename: &str, packages: &Vec<String>, exclude_dirs: &HashSet<String>) {
+fn find_file(dir: &Path, filename: &str, keywords: &Vec<String>, exclude_dirs: &HashSet<String>) {
     for entry in fs::read_dir(dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
@@ -57,8 +57,8 @@ fn find_file(dir: &Path, filename: &str, packages: &Vec<String>, exclude_dirs: &
             let contents = fs::read_to_string(path).unwrap();
 
             for line in contents.lines() {
-                for package in packages.iter() {
-                    if line.contains(package) {
+                for word in keywords.iter() {
+                    if line.contains(word) {
                         println!("  -{}", line);
                     }
                 }
@@ -66,7 +66,7 @@ fn find_file(dir: &Path, filename: &str, packages: &Vec<String>, exclude_dirs: &
         } else if path.is_dir()
             && !exclude_dirs.contains(path.file_name().unwrap().to_str().unwrap())
         {
-            find_file(&path, filename, packages, exclude_dirs);
+            find_file(&path, filename, keywords, exclude_dirs);
         }
     }
 }
