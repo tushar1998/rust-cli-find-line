@@ -20,3 +20,4 @@ jobs:
         with:
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          files: install.sh
