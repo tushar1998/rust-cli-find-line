@@ -27,7 +27,6 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
           files: |
             target/aarch64-apple-darwin/release/findline
