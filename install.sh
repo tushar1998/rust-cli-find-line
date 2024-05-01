@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Define the URL to your zipped binary on GitHub Releases
-BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/latest/download/your-app-aarch64-apple-darwin.zip"
-INSTALL_PATH="/usr/local/bin/your-app"
+BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/download/v0.0.1-dev.3/findline"
+INSTALL_PATH="/usr/local/bin/findline"
 
-echo "Downloading your-app..."
+echo "Downloading findline..."
 curl -L $BINARY_URL -o $INSTALL_PATH
 
 if [ $? -ne 0 ]; then
