@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::collections::HashSet;
 use std::fs::{self};
 use std::path::Path;
 
@@ -12,14 +13,17 @@ struct Args {
     #[arg(long, default_value_t = String::from("./"))]
     path: String,
 
-    #[arg(short, default_value_t = String::from("foo"))]
+    #[arg(short,long, default_value_t = String::from("package.json"))]
     filename: String,
+
+    #[arg(long, num_args(0..=50), default_values_t=[String::from("node_modules")])]
+    exclude_dir: Vec<String>,
 }
 
 fn main() {
     let args = Args::parse();
 
-    // println!("Hello {} {} {:?}!", args.path, args.filename, args.package);
+    // println!("{} {} {:?} {:?}!", args.path, args.filename, args.package, args.exclude_dir);
 
     // Parameters
     let path = Path::new(&args.path);
@@ -38,25 +42,17 @@ fn main() {
     //     .unwrap();
 
     let packages = args.package;
-    find_file(&path, &file_name, &packages);
+    let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect(); // Convert to HashSet
+    find_file(&path, &file_name, &packages, &exclude_dirs);
 }
 
-fn find_file(dir: &Path, filename: &str, packages: &Vec<String>) {
+fn find_file(dir: &Path, filename: &str, packages: &Vec<String>, exclude_dirs: &HashSet<String>) {
     for entry in fs::read_dir(dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
 
         if path.is_file() && path.file_name().unwrap() == filename {
-            println!(
-                "{:?} -> {}",
-                path.parent()
-                    .unwrap()
-                    .parent()
-                    .unwrap()
-                    .file_name()
-                    .unwrap(),
-                entry.file_name().to_str().unwrap()
-            );
+            println!("{:?} -> {}", path, entry.file_name().to_str().unwrap());
 
             let contents = fs::read_to_string(path).unwrap();
 
@@ -67,8 +63,10 @@ fn find_file(dir: &Path, filename: &str, packages: &Vec<String>) {
                     }
                 }
             }
-        } else if path.is_dir() {
-            find_file(&path, filename, packages);
+        } else if path.is_dir()
+            && !exclude_dirs.contains(path.file_name().unwrap().to_str().unwrap())
+        {
+            find_file(&path, filename, packages, exclude_dirs);
         }
     }
 }
