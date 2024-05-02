@@ -7,7 +7,7 @@ use std::path::Path;
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
 struct Args {
-    #[arg(short, long, num_args(0..=50))]
+    #[arg(short, long, num_args(0..=100))]
     keywords: Vec<String>,
 
     #[arg(short, long, default_value_t = String::from("./"))]
