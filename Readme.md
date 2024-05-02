@@ -17,6 +17,6 @@ curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.3/i
 ### Usage
 
 ```bash
-$ findline --keywords react --path ./my-app --file package.json --exclude-dir node_modules
+$ findline --keywords react --path ./my-app --filename package.json --exclude-dir node_modules
 ```
 
