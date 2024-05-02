@@ -1,7 +1,7 @@
 ## Rust CLI app to find keywords of a file in directory
 
 ### Installation
-curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.2-dev.0/install.sh | bash
+curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.2/install.sh | bash
 
 ### Usage
 
