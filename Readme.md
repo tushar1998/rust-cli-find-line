@@ -11,7 +11,7 @@ Future support for
 
 ### Installation
 ```bash
-curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.3-dev.0/install.sh | bash
+curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.3/install.sh | bash
 ```
 
 ### Usage
