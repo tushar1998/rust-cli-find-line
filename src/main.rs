@@ -1,4 +1,5 @@
 use clap::Parser;
+// use glob::{glob, glob_with, MatchOptions};
 use std::collections::HashSet;
 use std::fs::{self};
 use std::path::Path;
@@ -13,8 +14,8 @@ struct Args {
     #[arg(short, long, default_value_t = String::from("./"))]
     path: String,
 
-    #[arg(short, long, default_value_t = String::from("package.json"))]
-    filename: String,
+    #[arg(short, long, num_args(0..=50), default_values_t = [String::from("package.json")])]
+    filename: Vec<String>,
 
     #[arg(short, long, num_args(0..=50), default_values_t=[String::from("node_modules")])]
     exclude_dir: Vec<String>,
@@ -27,7 +28,7 @@ fn main() {
 
     // Parameters
     let path = Path::new(&args.path);
-    let file_name = String::from(args.filename);
+    let file_name = args.filename;
 
     // Delete the file
     // fs::remove_file("result.txt").unwrap_or_default();
@@ -42,31 +43,40 @@ fn main() {
     //     .unwrap();
 
     let keywords = args.keywords;
-    let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect(); // Convert to HashSet
+    let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect();
     find_file(&path, &file_name, &keywords, &exclude_dirs);
 }
 
-fn find_file(dir: &Path, filename: &str, keywords: &Vec<String>, exclude_dirs: &HashSet<String>) {
+fn find_file(
+    dir: &Path,
+    filenames: &Vec<String>,
+    keywords: &Vec<String>,
+    exclude_dirs: &HashSet<String>,
+) {
     for entry in fs::read_dir(dir).unwrap() {
         let entry = entry.unwrap();
         let path = entry.path();
 
-        if path.is_file() && path.file_name().unwrap() == filename {
-            println!("{:?} -> {}", path, entry.file_name().to_str().unwrap());
+        if path.is_file() {
+            for filename in filenames {
+                if path.file_name().unwrap().to_str().unwrap() == filename {
+                    println!("{:?} -> {}", path, entry.file_name().to_str().unwrap());
+                    let contents = fs::read_to_string(&path).unwrap();
 
-            let contents = fs::read_to_string(path).unwrap();
-
-            for line in contents.lines() {
-                for word in keywords.iter() {
-                    if line.contains(word) {
-                        println!("  -{}", line);
+                    for line in contents.lines() {
+                        for word in keywords.iter() {
+                            if line.contains(word) {
+                                println!("  -{}", line);
+                            }
+                        }
                     }
                 }
             }
         } else if path.is_dir()
             && !exclude_dirs.contains(path.file_name().unwrap().to_str().unwrap())
         {
-            find_file(&path, filename, keywords, exclude_dirs);
+            find_file(path.as_path(), filenames, keywords, exclude_dirs);
+            println!(" ")
         }
     }
 }

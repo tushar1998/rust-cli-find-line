@@ -12,6 +12,8 @@ update_path() {
 BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/download/v0.0.4/findline"
 INSTALL_PATH="/Users/$USER/bin"
 BIN_NAME="findline"
+OS="$(uname -s)"
+ARCH="$(uname -m)"
 
 echo "Downloading findline..."
 curl -L $BINARY_URL -o "$INSTALL_PATH/$BIN_NAME"
