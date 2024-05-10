@@ -10,21 +10,14 @@ Future support for
 
 - aarch64-unknown-linux-gnu
 - aarch-unknown-linux-musl
-- aarch64-pc-windows-msvc *
-- aarch64-pc-windows-gnu *
-
 - x86_64-apple-darwin
 - x86_64-unknown-linux-gnu
 - x86_64-unknown-linux-musl
-- x86_64-pc-windows-msvc *
-- x86_64-pc-windows-gnu *
-
-* - Might not consider the support
 
 ### Installation
 
 ```bash
-curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.0.5/install.sh | bash
+curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.1.0-dev.0/install.sh | bash
 ```
 
 ### Usage
