@@ -33,7 +33,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: tar
-          filename: findline.tar.gz
+          filename: findline-macos
           exclusions: "*.git*"
           directory: target
           path: .
@@ -53,7 +53,7 @@ jobs:
         target:
           [
             aarch64-unknown-linux-gnu,
-            aarch-unknown-linux-musl,
+            aarch64-unknown-linux-musl,
             x86_64-unknown-linux-gnu,
             x86_64-unknown-linux-musl,
           ]
@@ -75,7 +75,7 @@ jobs:
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: tar
-          filename: findline.tar.gz
+          filename: findline-linux
           exclusions: "*.git*"
           directory: target
           path: .
