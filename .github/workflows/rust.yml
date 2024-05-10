@@ -10,7 +10,18 @@ env:
 
 jobs:
   build:
-    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [macos-latest]
+        target:
+          [
+            aarch64-unknown-linux-gnu,
+            aarch-unknown-linux-musl,
+            x86_64-apple-darwin,
+            x86_64-unknown-linux-gnu,
+            x86_64-unknown-linux-musl,
+          ]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -19,14 +30,22 @@ jobs:
         with:
           toolchain: stable
           override: true
-          target: aarch64-apple-darwin
+          target: ${{ matrix.target }}
 
       - name: Build CLI Release App
-        run: cargo build --release --target=aarch64-apple-darwin --verbose
+        run: cargo build --release --target=${{ matrix.target }} --verbose
+
+      - name: Upload Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          type: "tar"
+          filename: "findline.tar.xz"
+          exclusions: "*.git*"
+          directory: "target"
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
+          prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: |
-            target/aarch64-apple-darwin/release/findline
+          files: findline.tar.xz

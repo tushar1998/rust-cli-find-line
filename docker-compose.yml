@@ -1,0 +1,35 @@
+services:
+  ubuntu-amd64:
+    image: ubuntu:jammy
+    platform: linux/amd64
+    container_name: ubuntu-amd64
+    command: tail -f /dev/null
+    volumes:
+      - ./data/ubuntu-amd64:/data
+
+  ubuntu-aarch64:
+    image: ubuntu:jammy
+    platform: linux/arm64/v8
+    container_name: ubuntu-aarch54
+    command: tail -f /dev/null
+    volumes:
+      - ./data/ubuntu-aarch64:/data
+
+  alpine-amd64:
+    image: alpine:latest
+    platform: linux/amd64
+    container_name: alpine-amd64
+    command: tail -f /dev/null
+    volumes:
+      - ./data/alpine-amd64:/data
+    
+  alpine-aarch64:
+    image: alpine:latest
+    platform: linux/arm64/v8
+    container_name: alpine-aarch64
+    command: tail -f /dev/null
+    volumes:
+      - ./data/alpine-aarch64:/data
+
+
+
