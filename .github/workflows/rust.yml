@@ -9,16 +9,51 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
+  build-macos:
+    name: "Build findline for mac apple systems"
     strategy:
       matrix:
         os: [macos-latest]
+        target: [aarch64-apple-darwin, x86_64-apple-darwin]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          target: ${{ matrix.target }}
+
+      - name: Build CLI Release App
+        run: cargo build --release --target=${{ matrix.target }} --verbose
+
+      - name: Create targer
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          type: tar
+          filename: findline.tar.gz
+          exclusions: "*.git*"
+          directory: target
+          path: .
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: findline-macos.tar.gz
+
+  build-linux:
+    name: "Build findline for linux and musl systems"
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
         target:
           [
-            aarch64-apple-darwin,
             aarch64-unknown-linux-gnu,
-            aarch64-unknown-linux-musl,
-            x86_64-apple-darwin,
+            aarch-unknown-linux-musl,
             x86_64-unknown-linux-gnu,
             x86_64-unknown-linux-musl,
           ]
@@ -36,17 +71,18 @@ jobs:
       - name: Build CLI Release App
         run: cargo build --release --target=${{ matrix.target }} --verbose
 
-      - name: Create target Archieve
+      - name: Create targer
         uses: thedoctor0/zip-release@0.7.5
         with:
           type: tar
           filename: findline.tar.gz
           exclusions: "*.git*"
           directory: target
+          path: .
 
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: findline.tar.gz
+          files: findline-linux.tar.gz
