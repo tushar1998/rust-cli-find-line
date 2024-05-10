@@ -9,7 +9,7 @@ update_path() {
 }
 
 # Define the URL to your zipped binary on GitHub Releases
-BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/download/v0.1.0-dev.1/findline"
+BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/download/v0.1.0-dev.2/findline"
 INSTALL_PATH="/Users/$USER/bin"
 BIN_NAME="findline"
 OS="$(uname -s)"
