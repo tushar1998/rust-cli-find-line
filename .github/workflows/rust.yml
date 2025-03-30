@@ -28,12 +28,9 @@ jobs:
           toolchain: stable
           override: true
           target: ${{ matrix.target }}
-        
-      - name: Install Cross
-        run: cargo install cross --git https://github.com/cross-rs/cross
 
       - name: Build for ${{ matrix.target }} Release
-        run: cross build --release --target=${{ matrix.target }} --verbose
+        run: cargo build --release --target=${{ matrix.target }} --verbose
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
