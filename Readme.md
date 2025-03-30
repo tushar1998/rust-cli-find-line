@@ -9,7 +9,7 @@ Currently support only for
 Future support for
 
 - aarch64-unknown-linux-gnu
-- aarch-unknown-linux-musl
+- aarch64-unknown-linux-musl
 - x86_64-apple-darwin
 - x86_64-unknown-linux-gnu
 - x86_64-unknown-linux-musl
@@ -31,7 +31,7 @@ Architecture System Matrix
 | -------- | ------- |
 | aarch64-apple-darwin | Apple Silicon Macbooks |
 | aarch64-unknown-linux-gnu | Ubuntu |
-| aarch-unknown-linux-musl | Alpine |
+| aarch64-unknown-linux-musl | Alpine |
 | aarch64-pc-windows-msvc | Windows PC |
 | aarch64-pc-windows-gnu | WSL on Windows PC |
 | x86_64-apple-darwin | Intel/AMD Chip Macbooks |

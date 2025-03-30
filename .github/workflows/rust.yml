@@ -13,76 +13,77 @@ jobs:
     name: "Build findline for mac apple systems"
     strategy:
       matrix:
-        os: [macos-latest]
-        target: [aarch64-apple-darwin, x86_64-apple-darwin]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
+        target:
+          - aarch64-apple-darwin
+          - x86_64-apple-darwin
 
-      - name: Setup Rust Toolchain
+    runs-on: macos-latest
+    steps:
+      - name : Repository Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
           target: ${{ matrix.target }}
+        
+      - name: Install Cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Build CLI Release App
-        run: cargo build --release --target=${{ matrix.target }} --verbose
+      - name: Build for ${{ matrix.target }} Release
+        run: cross build --release --target=${{ matrix.target }} --verbose
 
-      - name: Create targer
-        uses: thedoctor0/zip-release@0.7.5
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          type: tar
-          filename: findline-macos
-          exclusions: "*.git*"
-          directory: target
-          path: .
+          name: build-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/
 
-      - name: Release
+      - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: findline-macos.tar.gz
+          files: target/${{ matrix.target }}/release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
     name: "Build findline for linux and musl systems"
     strategy:
       matrix:
-        os: [ubuntu-latest]
         target:
-          [
-            aarch64-unknown-linux-gnu,
-            aarch64-unknown-linux-musl,
-            x86_64-unknown-linux-gnu,
-            x86_64-unknown-linux-musl,
-          ]
-    runs-on: ${{ matrix.os }}
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Repository Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Rust Toolchain
+      - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
           target: ${{ matrix.target }}
 
-      - name: Build CLI Release App
-        run: cargo build --release --target=${{ matrix.target }} --verbose
+      - name: Install cross
+        run: cargo install cross --git https://github.com/cross-rs/cross
 
-      - name: Create targer
-        uses: thedoctor0/zip-release@0.7.5
+      - name: Build for ${{ matrix.target }} Release
+        run: cross build --release --target=${{ matrix.target }} --verbose
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          type: tar
-          filename: findline-linux
-          exclusions: "*.git*"
-          directory: target
-          path: .
+          name: build-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/
 
-      - name: Release
+      - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          prerelease: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: findline-linux.tar.gz
+          files: target/${{ matrix.target }}/release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

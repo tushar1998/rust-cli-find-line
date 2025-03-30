@@ -76,7 +76,7 @@ fn find_file(
             && !exclude_dirs.contains(path.file_name().unwrap().to_str().unwrap())
         {
             find_file(path.as_path(), filenames, keywords, exclude_dirs);
-            println!(" ")
+            // println!(" ")
         }
     }
 }
