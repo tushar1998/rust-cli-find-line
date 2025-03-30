@@ -32,6 +32,12 @@ jobs:
       - name: Build for ${{ matrix.target }} Release
         run: cargo build --release --target=${{ matrix.target }} --verbose
 
+      - name: Package build artifacts
+        run: |
+          mkdir -p dist
+          cp target/${{ matrix.target }}/release/findline dist/findline-${{ matrix.target }}
+          tar -czvf dist/findline-${{ matrix.target }}.tar.gz -C dist findline-${{ matrix.target }}
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -71,6 +77,12 @@ jobs:
 
       - name: Build for ${{ matrix.target }} Release
         run: cross build --release --target=${{ matrix.target }} --verbose
+
+      - name: Package build artifacts
+        run: |
+          mkdir -p dist
+          cp target/${{ matrix.target }}/release/findline dist/findline-${{ matrix.target }}
+          tar -czvf dist/findline-${{ matrix.target }}.tar.gz -C dist findline-${{ matrix.target }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
