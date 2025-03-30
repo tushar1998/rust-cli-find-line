@@ -1,11 +1,13 @@
 Architecture
 
+Host - Apple Silicon
+
 Apple
  - Mac OS on arm64 -> aarch64-apple-darwin
-   - `cross build --release --target=aarch64-apple-darwin`
+   - `cargo build --release --target=aarch64-apple-darwin`
 
  - Mac OS on amd64 -> x86_64-apple-darwin
-   - `cross build --release --target=x86_64-apple-darwin`
+   - `cargo build --release --target=x86_64-apple-darwin`
 
 Linux - GNU
  - Ubuntu on arm64 -> aarch64-unknown-linux-gnu
