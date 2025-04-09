@@ -55,10 +55,24 @@ mv "findline-$TARGET" "$INSTALL_DIR/findline"
 
 # Add ~/bin to PATH if not already added
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
-    echo "export PATH=\"$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
-    echo "export PATH=\"$HOME/bin:\$PATH\"" >> "$HOME/.zshrc"
+    echo "Adding $HOME/bin to PATH..."
+    SHELL_PROFILE=""
+    if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
+        SHELL_PROFILE="$HOME/.bashrc"
+    elif [ -n "$ZSH_VERSION" ] && [ -f "$HOME/.zshrc" ]; then
+        SHELL_PROFILE="$HOME/.zshrc"
+    elif [ -f "$HOME/.profile" ]; then
+        SHELL_PROFILE="$HOME/.profile"
+    fi
+
+    if [ -n "$SHELL_PROFILE" ]; then
+        echo "export PATH=\"$HOME/bin:\$PATH\"" >> "$SHELL_PROFILE"
+        echo "Added to \$SHELL_PROFILE ($SHELL_PROFILE). Restart your shell or run 'source $SHELL_PROFILE'."
+    else
+        echo "Warning: Couldn't detect shell config file. Add this line manually to your shell profile:"
+        echo "export PATH=\"$HOME/bin:\$PATH\""
+    fi
     export PATH="$HOME/bin:$PATH"
-    echo "Added $HOME/bin to PATH. Restart your terminal or run 'source ~/.bashrc' (or 'source ~/.zshrc' for zsh)."
 fi
 
 echo "Installation complete! Run 'findline --help' to verify."
