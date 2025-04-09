@@ -20,9 +20,11 @@ Future support for
 
 ### Installation
 
-```bash
-curl -s https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/v0.1.0-dev.5/install.sh | bash
-```
+| Method    | Command                                                                                           |
+| :-------- | :------------------------------------------------------------------------------------------------ |
+| **curl**  | `sh -c "$(curl -fsSL https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/master/install.sh)"` |
+| **wget**  | `sh -c "$(wget -O- https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/master/install.sh)"`   |
+| **fetch** | `sh -c "$(fetch -o - https://raw.githubusercontent.com/tushar1998/rust-cli-find-line/master/install.sh)"` |
 
 ### Usage
 
@@ -43,5 +45,3 @@ Architecture System Matrix
 | aarch64-pc-windows-msvc | Windows on ARM |
 | x86_64-pc-windows-msvc | 64-bit Windows PC |
 | x86_64-pc-windows-gnu | 64-bit WSL on Windows PC GNU |
-
-
