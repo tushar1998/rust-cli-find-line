@@ -44,7 +44,7 @@ fn main() {
 
     let keywords = args.keywords;
     let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect();
-    find_file(&path, &file_name, &keywords, &exclude_dirs);
+    find_file(path, &file_name, &keywords, &exclude_dirs);
 }
 
 fn find_file(

@@ -1,33 +1,64 @@
 #!/bin/bash
 
-update_path() {
-    local profile_file="$1"
-    if [ -f "$profile_file" ] && ! grep -qx 'export PATH="$HOME/bin:$PATH"' "$profile_file"; then
-        echo 'export PATH="$HOME/bin:$PATH"' >> "$profile_file"
-        echo "Updated $profile_file with PATH settings."
-    fi
-}
+set -e
 
-# Define the URL to your zipped binary on GitHub Releases
-BINARY_URL="https://github.com/tushar1998/rust-cli-find-line/releases/download/v0.1.0-dev.5/findline"
-INSTALL_PATH="/Users/$USER/bin"
-BIN_NAME="findline"
+REPO_OWNER="tushar1998"
+REPO_NAME="rust-cli-find-line"
+INSTALL_DIR="$HOME/bin"
+
+# Detect OS and architecture
 OS="$(uname -s)"
 ARCH="$(uname -m)"
 
-echo "Downloading findline..."
-curl -L $BINARY_URL -o "$INSTALL_PATH/$BIN_NAME"
+case "$OS" in
+    Linux)
+        case "$ARCH" in
+            x86_64) TARGET="x86_64-unknown-linux-gnu" ;;
+            aarch64) TARGET="aarch64-unknown-linux-gnu" ;;
+            *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+        esac
+        ;;
+    Darwin)
+        case "$ARCH" in
+            x86_64) TARGET="x86_64-apple-darwin" ;;
+            arm64) TARGET="aarch64-apple-darwin" ;;
+            *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+        esac
+        ;;
+    *)
+        echo "Unsupported OS: $OS"
+        exit 1
+        ;;
+esac
 
-mkdir $INSTALL_PATH
+# Fetch latest release
+LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/latest | grep "browser_download_url" | grep "$TARGET" | cut -d '"' -f 4)
 
-echo "Setting executable permissions..."
-chmod +x "$INSTALL_PATH/$BIN_NAME"
-
-update_path "$HOME/.bashrc"
-update_path "$HOME/.zshrc"
-
-if [[ -f "$INSTALL_PATH/$BIN_NAME" ]]; then
-    echo "Installation successful, findline is now available."
-else
-    echo "Installation failed. Please check permissions and internet connection."
+if [ -z "$LATEST_RELEASE" ]; then
+    echo "Failed to find a compatible release for target $TARGET."
+    exit 1
 fi
+
+echo "Downloading $LATEST_RELEASE..."
+curl -L "$LATEST_RELEASE" -o "findline-$TARGET.tar.gz"
+
+echo "Extracting binary..."
+tar -xzvf "findline-$TARGET.tar.gz"
+chmod +x "findline-$TARGET"
+
+# Move binary to install directory
+echo "Installing findline to $INSTALL_DIR..."
+mkdir -p "$INSTALL_DIR"
+
+# Move and rename to findline
+mv "findline-$TARGET" "$INSTALL_DIR/findline" 
+
+# Add ~/bin to PATH if not already added
+if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
+    echo "export PATH=\"$HOME/bin:\$PATH\"" >> "$HOME/.bashrc"
+    echo "export PATH=\"$HOME/bin:\$PATH\"" >> "$HOME/.zshrc"
+    export PATH="$HOME/bin:$PATH"
+    echo "Added $HOME/bin to PATH. Restart your terminal or run 'source ~/.bashrc' (or 'source ~/.zshrc' for zsh)."
+fi
+
+echo "Installation complete! Run 'findline --help' to verify."
