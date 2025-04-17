@@ -24,7 +24,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    // println!("{} {} {:?} {:?}!", args.path, args.filename, args.keywords, args.exclude_dir);
+    // println!("{} {:?} {:?} {:?}!", args.path, args.filename, args.keywords, args.exclude_dir);
 
     // Parameters
     let path = Path::new(&args.path);
@@ -41,6 +41,11 @@ fn main() {
     //     .append(true)
     //     .open("result.txt")
     //     .unwrap();
+
+    if !path.exists() {
+        println!("Path does not exist - {}", path.display());
+        return;
+    }
 
     let keywords = args.keywords;
     let exclude_dirs: HashSet<_> = args.exclude_dir.iter().cloned().collect();
