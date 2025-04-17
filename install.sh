@@ -53,6 +53,8 @@ mkdir -p "$INSTALL_DIR"
 # Move and rename to findline
 mv "findline-$TARGET" "$INSTALL_DIR/findline" 
 
+rm -rf findline-$TARGET.tar.gz
+
 # Add ~/bin to PATH if not already added
 if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     echo "Adding $HOME/bin to PATH..."
