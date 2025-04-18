@@ -34,6 +34,8 @@ esac
 # Fetch latest release
 LATEST_RELEASE=$(curl -s https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/latest | grep "browser_download_url" | grep "$TARGET" | cut -d '"' -f 4)
 
+VERSION=$(echo "$LATEST_RELEASE" | grep -oE 'v[0-9]+(\.[0-9]+)*')
+
 if [ -z "$LATEST_RELEASE" ]; then
     echo "Failed to find a compatible release for target $TARGET."
     exit 1
@@ -76,5 +78,31 @@ if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
     fi
     export PATH="$HOME/bin:$PATH"
 fi
+
+# Installation Tracking / Monitoring
+if [ "$OS" = "Darwin" ]; then
+    # macos
+    DISTRO=$(sw_vers -productName)" "$(sw_vers -productVersion)
+elif [ -f /etc/os-release ]; then
+    # Linux
+    DISTRO=$(grep "^PRETTY_NAME" /etc/os-release | cut -d= -f2 | tr -d '"')
+else
+    DISTRO="Unknown"
+fi
+
+USER_AGENT="Findline-Installer/1.0 ($OS; $ARCH; $DISTRO)" 
+
+curl --silent --output /dev/null --location 'https://findline-rust.mistry-tushar98.workers.dev/installs' \
+  --header 'Content-Type: application/json' \
+  --data "$(cat <<EOF
+{
+  "os": "$OS",
+  "arch": "$ARCH",
+  "target": "$TARGET",
+  "version": "$VERSION",
+  "user_agent": "$USER_AGENT"
+}
+EOF
+)"
 
 echo "Installation complete! Run 'findline --help' to verify."
