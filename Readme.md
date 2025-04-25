@@ -1,6 +1,6 @@
 ## Rust CLI app to find keywords of a file in directory
 
-![](https://github.com/tushar1998/rust-cli-find-line/actions/workflows/rust.yml/badge.svg)
+![Build Status](https://github.com/tushar1998/rust-cli-find-line/actions/workflows/rust.yml/badge.svg?branch=master)
 
 ### Platform Support
 
